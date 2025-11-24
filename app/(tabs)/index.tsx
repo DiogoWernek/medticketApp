@@ -1,6 +1,7 @@
-import { View, Text, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
+// imports (adicionar TouchableOpacity e QrCode)
+import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native';
 import { useEffect, useState } from 'react';
-import { Clock, MapPin, Users, Activity } from 'lucide-react-native';
+import { Clock, MapPin, Users, Activity, QrCode } from 'lucide-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 
@@ -47,6 +48,14 @@ export default function Dashboard() {
         <View style={styles.header}>
           <Text style={styles.greeting}>Olá, {userName}!</Text>
           <Text style={styles.subtitle}>Como está se sentindo hoje?</Text>
+        </View>
+
+        {/* Botão Scanear QR Code */}
+        <View style={styles.scanContainer}>
+          <TouchableOpacity style={styles.scanButton} onPress={() => router.push('/scan')}>
+            <QrCode size={20} color="#FFFFFF" strokeWidth={2} />
+            <Text style={styles.scanButtonText}>Scanear QR Code</Text>
+          </TouchableOpacity>
         </View>
 
         {/* Current ticket number */}
@@ -106,6 +115,7 @@ export default function Dashboard() {
   );
 }
 
+// styles (adicionar novos estilos)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -259,5 +269,27 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#1E293B',
     flex: 1,
+  },
+  scanContainer: {
+    marginBottom: 12,
+  },
+  scanButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: '#A294F9',
+    borderRadius: 12,
+    paddingVertical: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  scanButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

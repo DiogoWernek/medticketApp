@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Alert } from 'react-native';
 import { useMemo, useState } from 'react';
 import { CalendarDays, MapPin, Clock, Building2 } from 'lucide-react-native';
+import { StyledInput } from '@/components/StyledInput';
 
 type Clinic = {
   id: string;
@@ -42,7 +43,16 @@ export default function Agendamentos() {
   const days = useMemo(() => nextDays(7), []);
   const [selectedDayIndex, setSelectedDayIndex] = useState(0);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
-
+  const [query, setQuery] = useState('');
+  const filteredClinics = useMemo(() => {
+    const q = query.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    if (!q) return CLINICS;
+    const matches = (s: string) =>
+      s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(q);
+    return CLINICS.filter(c =>
+      matches(c.name) || matches(c.address) || c.specialties.some(sp => matches(sp))
+    );
+  }, [query]);
   const handleBook = () => {
     if (!selectedClinic || !selectedSlot) {
       Alert.alert('Selecione', 'Escolha uma clínica, um dia e um horário.');
@@ -67,13 +77,26 @@ export default function Agendamentos() {
 
         {/* Lista de clínicas */}
         <View style={styles.card}>
+          {/* Busca acima do título */}
+          <View style={styles.searchWrapper}>
+            <StyledInput
+              style={styles.searchInput}
+              placeholder="Buscar clínica, endereço ou especialidade"
+              value={query}
+              onChangeText={setQuery}
+              autoCapitalize="none"
+              autoCorrect={false}
+              clearButtonMode="always"
+            />
+          </View>
+
           <View style={styles.cardHeader}>
             <Building2 size={20} color="#7C3AED" />
             <Text style={styles.cardTitle}>Clínicas Disponíveis</Text>
           </View>
 
           <View style={styles.clinicList}>
-            {CLINICS.map(c => (
+            {filteredClinics.map(c => (
               <TouchableOpacity
                 key={c.id}
                 style={[
@@ -204,4 +227,17 @@ const styles = StyleSheet.create({
   },
   bookButtonDisabled: { opacity: 0.7 },
   bookButtonText: { color: '#FFFFFF', fontSize: 16, fontWeight: '600' },
+  searchWrapper: {
+    marginBottom: 12,
+  },
+  searchInput: {
+    fontSize: 16,
+    color: '#1E293B',
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
 });

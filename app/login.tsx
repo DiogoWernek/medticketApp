@@ -97,18 +97,14 @@ export default function Login() {
               </Text>
             </TouchableOpacity>
 
+            {/* Link para recuperar senha */}
             <View style={styles.linksRow}>
-              <TouchableOpacity onPress={() => router.push('/register')}>
+                <TouchableOpacity onPress={() => router.push('/register')}>
                 <Text style={styles.linkText}>Criar conta</Text>
               </TouchableOpacity>
-            </View>
-
-            {/* Demo credentials hint */}
-            <View style={styles.demoHint}>
-              <Text style={styles.demoHintTitle}>💡 Para demonstração</Text>
-              <Text style={styles.demoHintText}>
-                Digite qualquer usuário e senha para acessar o app
-              </Text>
+              <TouchableOpacity onPress={() => router.push('/recover')}>
+                <Text style={styles.linkText}>Esqueci minha senha</Text>
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -225,6 +221,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   linksRow: {
+    display: 'flex',
+    gap: 100,
+    flexDirection: 'column',
     alignItems: 'center',
     marginTop: 8,
   },
